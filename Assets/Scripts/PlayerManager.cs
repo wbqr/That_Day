@@ -20,8 +20,7 @@ public class PlayerManager : MovingObject
     public float runSpeed;
     private float applyRunSpeed;
 
-    public int walkCount;
-    private int currentWalkCount;
+    private int currentWalkCount = 0;
 
 
     private bool canMove = true;

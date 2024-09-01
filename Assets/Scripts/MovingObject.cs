@@ -11,6 +11,9 @@ public class MovingObject : MonoBehaviour
     private bool notCoroutine = false;
     protected Vector3 vector;
     public Animator animator;
+    public int walkCount;
+    private int currentWalkCount = 0;
+
 
     public Queue<string> queue;
     public BoxCollider2D boxCollider;
@@ -86,12 +89,15 @@ public class MovingObject : MonoBehaviour
             }
 
             animator.SetBool("Walking", true);
-            
 
-            transform.Translate(vector.x * (speed), vector.y * (speed), 0);
-
-            yield return new WaitForSeconds(0.01f);
-
+            while (currentWalkCount < walkCount)
+            {
+                transform.Translate(vector.x * (speed), vector.y * (speed), 0);
+                currentWalkCount++;
+                yield return new WaitForSeconds(0.01f);
+            }      
+            currentWalkCount = 0;
+    
             if (_frequency != 5)
             {
                 animator.SetBool("Walking", false);
@@ -108,7 +114,7 @@ public class MovingObject : MonoBehaviour
             // 레이저
 
             Vector2 start = transform.position; //A지점, 캐릭터의 현재 위치값
-            Vector2 end = start + new Vector2(vector.x * speed , vector.y * speed ); // B지점, 캐릭터가 이동하고자 하는 위치값
+            Vector2 end = start + new Vector2(vector.x * speed * walkCount , vector.y * speed * walkCount); // B지점, 캐릭터가 이동하고자 하는 위치값
 
             boxCollider.enabled = false;
             hit = Physics2D.Linecast(start, end, layerMask);
